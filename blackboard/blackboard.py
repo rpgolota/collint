@@ -184,20 +184,22 @@ def blackboard(M, B, return_agent=False):
         a.find_hints()
         # update blackboard
         a.pick_and_replace(blackboard)
-
+        
     matchmax = 0
     while True:
         # choose random agent
         a = random.choice(agents)
         # perform a move after looking over blackbloard
         a.move(blackboard)
+        # update hints
+        a.find_hints()
         # update t
         t += delta
         # update blackboard
         a.pick_and_replace(blackboard)
         # check for solution
         if a.is_solved():
-            print(f"Max Matching({matching(a.problem.assignment)}), C({comp_cost(M, t):.6f})")
+            print(f"Max Matching({matching(a.problem.assignment)}), Blackboard: {len(blackboard.data)}, C({comp_cost(M, t):.6f})")
             if return_agent:
                 return t, a
             else:
@@ -206,7 +208,7 @@ def blackboard(M, B, return_agent=False):
         mat = matching(a.problem.assignment)
         if mat > matchmax:
             matchmax = mat 
-        print(f"Max Matching({matchmax}), C({comp_cost(M, t):.6f})")
+        print(f"Max Matching({matchmax}), Blackboard: {len(blackboard.data)}, C({comp_cost(M, t):.6f})")
 
 # computes the computational cost
 def comp_cost(M, t_star):
@@ -225,7 +227,7 @@ def matching(assignment):
 if __name__ == "__main__":
     
     M = 10
-    B = 10
+    B = 7
     show_assignment = True
     
     t_star, a = blackboard(M, B, return_agent=show_assignment)
