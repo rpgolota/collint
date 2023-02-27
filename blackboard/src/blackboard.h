@@ -5,11 +5,17 @@
 #include <vector>
 #include <utility>
 
+template<typename Iter, typename RandomGenerator>
+Iter select_randomly(Iter, Iter, RandomGenerator&);
+
+template<typename Iter>
+Iter select_randomly(Iter, Iter);
+
 class BlackboardMethod {
 
 public:
 
-    BlackboardMethod(int, int);
+    BlackboardMethod(int, int, std::string);
     double solve();
 
     using Hint = std::pair<char, char>;
@@ -17,11 +23,10 @@ public:
     class Agent {
         void swap_letter_assignments(char, char);
         void make_elementary_move();
-        void parse_problem_statement(std::string);
 
     public:
 
-        Agent(std::string);
+        Agent(std::string, std::string, std::string);
 
         void make_random_assignment();
         void find_hints();
@@ -35,6 +40,8 @@ public:
         std::vector<Hint> hints;
     };
 
+    int M, B;
+    std::string problem_statement;
     std::vector<Agent> agents;
     std::vector<Hint> blackboard;
 };

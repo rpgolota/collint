@@ -14,6 +14,7 @@ double computational_cost(int M, double t_star) {
 int main() {
 
     int return_code = 0;
+    std::string problem_statement = "DONALD + GERALD = ROBERT";
 
     std::ofstream output;
     output.open("out.csv");
@@ -25,7 +26,7 @@ int main() {
         int M = 10;
         int B = 7;
 
-        double t_star = BlackboardMethod(M, B).solve();
+        double t_star = BlackboardMethod(M, B, problem_statement).solve();
         double C = computational_cost(M, t_star);
         output << M << "," << B << "," << std::fixed << std::setprecision(2) << t_star << "," << std::setprecision(6) << C << std::endl;
     
