@@ -13,41 +13,26 @@ double computational_cost(int M, double t_star) {
 
 int main() {
 
-    // int return_code = 0;
-    // std::string problem_statement = "DONALD + GERALD = ROBERT";
+    int return_code = 0;
+    std::string problem_statement = "DONALD + GERALD = ROBERT";
 
-    // std::ofstream output;
-    // output.open("out.csv");
+    std::ofstream output;
+    output.open("out.csv");
 
-    // output << "Group Size" << "," << "Blackboard Size" << "," << "Time when Completed" << "," << "Computational Cost" << std::endl;
+    output << "Group Size" << "," << "Blackboard Size" << "," << "Time when Completed" << "," << "Computational Cost" << std::endl;
     
-    // /* Run some kind of loop here */ {
+    for (int i = 0; i < 1; i++) {
 
-    //     int M = 10;
-    //     int B = 7;
+        int M = 10;
+        int B = 7;
 
-    //     double t_star = BlackboardMethod(M, B, problem_statement).solve();
-    //     double C = computational_cost(M, t_star);
-    //     output << M << "," << B << "," << std::fixed << std::setprecision(2) << t_star << "," << std::setprecision(6) << C << std::endl;
+        double t_star = BlackboardMethod(M, B, problem_statement).solve();
+        double C = computational_cost(M, t_star);
+        output << M << "," << B << "," << std::fixed << std::setprecision(2) << t_star << "," << std::setprecision(6) << C << std::endl;
     
-    // }
-
-    // output.close();
-    
-    // return return_code;
-
-    std::vector<int> list = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-    int chosen[10] = {0};
-
-    while (true) {
-        int idx = *select_randomly(list.begin(), list.end());
-        chosen[idx] += 1;
-        for (int i : chosen) {
-            std::cout << i << " ";
-        }
-        std::cout << std::endl;
     }
 
-    return 0;
+    output.close();
+    
+    return return_code;
 }

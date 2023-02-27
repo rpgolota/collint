@@ -4,12 +4,8 @@
 #include <string>
 #include <vector>
 #include <utility>
-
-template<typename Iter, typename RandomGenerator>
-Iter select_randomly(Iter, Iter, RandomGenerator&);
-
-template<typename Iter>
-Iter select_randomly(Iter, Iter);
+#include <tuple>
+#include <unordered_map>
 
 class BlackboardMethod {
 
@@ -18,25 +14,26 @@ public:
     BlackboardMethod(int, int, std::string);
     double solve();
 
-    using Hint = std::pair<char, char>;
+    using One = std::pair<char, char>;
+    using Hint = std::tuple<One, One, One>;
 
     class Agent {
-        void swap_letter_assignments(char, char);
         void make_elementary_move();
+        void assimilate_hint(Hint);
 
     public:
 
         Agent(std::string, std::string, std::string);
 
+        void print();
         void make_random_assignment();
         void find_hints();
-        void update_blackboard(std::vector<Hint>&);
+        void update_blackboard(std::vector<Hint>&, int);
         void make_move(std::vector<Hint>&);
         bool is_solved();
 
         std::string problem[3];
-        char letters[10];
-        char assignment[10];
+        std::unordered_map<char, char> assignment;
         std::vector<Hint> hints;
     };
 
