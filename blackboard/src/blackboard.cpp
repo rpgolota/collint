@@ -216,7 +216,7 @@ void BlackboardMethod::Agent::find_hints() {
         if ((a_digit + b_digit) % 10 != c_digit)
             continue;
 
-        if (i != 9 && (a_digit + b_digit + 1) % 10 != c_digit)
+        if (i != problem[0].size() - 1 && (a_digit + b_digit + 1) % 10 != c_digit)
             continue;
 
         Hint hint = std::make_tuple(std::make_pair(a_letter, a_digit_c), std::make_pair(b_letter, b_digit_c), std::make_pair(c_letter, c_digit_c));
