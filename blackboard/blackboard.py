@@ -44,14 +44,12 @@ class Cryptarithmetic_Addition:
 
             # print(f"{a}={a_d},{b}={b_d},{r}={r_d}")
 
-            if (a_d + b_d) % 10 != r_d:
-                continue
+            c1 =  (a_d + b_d) % 10 == r_d
+            c2 = i != N-1 and (1 + a_d + b_d) % 10 == r_d
             
-            if i != N-1 and (1 + a_d + b_d) % 10 != r_d:
-                continue
-            
-            hint = {a: self.assignment[a], b: self.assignment[b], r: self.assignment[r]}
-            hints.append(hint)
+            if c1 or c2:
+                hint = {a: self.assignment[a], b: self.assignment[b], r: self.assignment[r]}
+                hints.append(hint)
             
         return hints
     
@@ -124,19 +122,19 @@ class Agent:
         
         # if the blackboard is full, place hint on blackboard replacing a hint that the agent does not have
         if blackboard.is_full():
-            print("Replacing a hint on blackboard.")
+            # print("Replacing a hint on blackboard.")
             different = [i for i, h in enumerate(blackboard.data) if h not in self.hints]
             to_replace = random.choice(different)
             blackboard.data[to_replace] = selected_hint
         else:
-            print("Appending hint to blackboard.")
+            # print("Appending hint to blackboard.")
             blackboard.data.append(selected_hint)
     
     def find_hints(self):
         # sets self.hints
         self.hints = self.problem.find_hints()
-        if self.hints:
-            print(f"Found new hints: {len(self.hints)}")
+        # if self.hints:
+        #     print(f"Found new hints: {len(self.hints)}")
     
     # agent makes a move
     def move(self, blackboard):
@@ -148,11 +146,11 @@ class Agent:
             # if not currently using that hint
             if random_hint not in self.hints:
                 # assimilate the hint
-                print("Assimilating hint")
+                # print("Assimilating hint")
                 self.problem.assimilate_hint(random_hint)
                 return
         
-        print("Doing elementary move")
+        # print("Doing elementary move")
         # otherwise make the elementary move
         self.problem.elementary_move()
     
@@ -205,7 +203,7 @@ def blackboard(M, B, return_agent=False):
         a.pick_and_replace(blackboard)
         # check for solution
         if a.is_solved():
-            print(f"Max Matching({matching(a.problem.assignment)}), Blackboard: ({len(blackboard.data)}), C({comp_cost(M, t):.6f})")
+            print(f"Max Matching({matching(a.problem.assignment)}), C({comp_cost(M, t):.6f})")
             if return_agent:
                 return t, a
             else:
@@ -214,7 +212,7 @@ def blackboard(M, B, return_agent=False):
         mat = matching(a.problem.assignment)
         if mat > matchmax:
             matchmax = mat 
-        print(f"Max Matching({matchmax}), Blackboard: ({len(blackboard.data)}), C({comp_cost(M, t):.6f})")
+        print(f"Max Matching({matchmax}), C({comp_cost(M, t):.6f})")
 
 # computes the computational cost
 def comp_cost(M, t_star):
