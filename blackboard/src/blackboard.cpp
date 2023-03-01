@@ -77,12 +77,12 @@ double BlackboardMethod::solve() {
         t += delta_t;
         a.update_blackboard(blackboard, B);
 
-        for (auto a : blackboard) {
-            std::cout << "[" << std::get<0>(a).first << "=" << std::get<0>(a).second << ", " << std::get<1>(a).first << "=" << std::get<1>(a).second << ", " << std::get<2>(a).first << "=" << std::get<2>(a).second << "] ";
-        }
-        if (!blackboard.empty()) {
-            std::cout << std::endl;
-        }
+        // for (auto a : blackboard) {
+        //     std::cout << "[" << std::get<0>(a).first << "=" << std::get<0>(a).second << ", " << std::get<1>(a).first << "=" << std::get<1>(a).second << ", " << std::get<2>(a).first << "=" << std::get<2>(a).second << "] ";
+        // }
+        // if (!blackboard.empty()) {
+        //     std::cout << std::endl;
+        // }
 
         if (a.is_solved()) {
             return t;
@@ -207,27 +207,30 @@ void BlackboardMethod::Agent::find_hints() {
 
         char a_digit_c = assignment[a_letter];
         char b_digit_c = assignment[b_letter];
-        char c_digit_c = assignment[b_letter];
+        char c_digit_c = assignment[c_letter];
 
-        int a_digit = a_digit_c - 65;
-        int b_digit = b_digit_c - 65;
-        int c_digit = c_digit_c - 65;
+        int a_digit = a_digit_c - 48;
+        int b_digit = b_digit_c - 48;
+        int c_digit = c_digit_c - 48;
 
-        if ((a_digit + b_digit) % 10 != c_digit)
-            continue;
+        // std::cout << a_digit << " + " << b_digit << " = " << (a_digit + b_digit) % 10 << "(" << c_digit << ")" << std::endl;
+        // std::cout << a_digit << " + " << b_digit << " + 1" << " = " << (a_digit + b_digit + 1) % 10 << "(" << c_digit << ")" << std::endl;
 
-        if (i != problem[0].size() - 1 && (a_digit + b_digit + 1) % 10 != c_digit)
-            continue;
+        bool cond1 = (a_digit + b_digit) % 10 == c_digit;
+        bool cond2 = i != (problem[0].size() - 1) && (a_digit + b_digit + 1) % 10 == c_digit;
 
-        Hint hint = std::make_tuple(std::make_pair(a_letter, a_digit_c), std::make_pair(b_letter, b_digit_c), std::make_pair(c_letter, c_digit_c));
-        hints.push_back(hint);
+        if (cond1 || cond2) {
+
+            Hint hint = std::make_tuple(std::make_pair(a_letter, a_digit_c), std::make_pair(b_letter, b_digit_c), std::make_pair(c_letter, c_digit_c));
+            hints.push_back(hint);
+        }
     }
 
 }
 void BlackboardMethod::Agent::update_blackboard(std::vector<BlackboardMethod::Hint>& blackboard, int B) {
     
     if (hints.empty()) {
-        std::cout << "No hints" << std::endl;
+        // std::cout << "No hints" << std::endl;
         return;
     }
 
@@ -239,14 +242,14 @@ void BlackboardMethod::Agent::update_blackboard(std::vector<BlackboardMethod::Hi
     }
 
     if (novel.empty()) {
-        std::cout << "No novel" << std::endl;
+        // std::cout << "No novel" << std::endl;
         return;
     }
 
     Hint selected = *select_randomly(novel.begin(), novel.end());
 
     if (blackboard.size() == B) {
-        std::cout << "Full blackboard" << std::endl;
+        // std::cout << "Full blackboard" << std::endl;
         std::vector<int> different;
         for (auto h : blackboard) {
             auto it = std::find(hints.begin(), hints.end(), h);
@@ -257,7 +260,7 @@ void BlackboardMethod::Agent::update_blackboard(std::vector<BlackboardMethod::Hi
         int to_replace = *select_randomly(different.begin(), different.end());
         blackboard[to_replace] = selected;
     } else {
-        std::cout << "Not full blackboard" << std::endl;
+        // std::cout << "Not full blackboard" << std::endl;
         blackboard.push_back(selected);
     }
 
@@ -268,6 +271,7 @@ void BlackboardMethod::Agent::make_move(std::vector<BlackboardMethod::Hint>& bla
         Hint random = *select_randomly(blackboard.begin(), blackboard.end());
         if (std::find(hints.begin(), hints.end(), random) == hints.end()) {
             assimilate_hint(random);
+            return;
         }
     }
     make_elementary_move();

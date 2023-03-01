@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 struct TestResult {
     std::string name;
@@ -43,3 +44,16 @@ bool tabulate(std::vector<TestResult> res) {
 #define RUN(_name, ...) do { TestResult r = _name(__VA_ARGS__); r.name = #_name; results.push_back(r); } while(false)
 #define END_TESTING return tabulate(results); }
 #define STATUS(_status, _message) return TestResult {.status = _status, .message = _message}
+#define CHECK(_status, _message) do { if (!(_status)) { STATUS(_status, _message); } } while(false)
+#define ENDTEST STATUS(true, "")
+#define TODO STATUS(false, "Test not yet implemented.")
+
+struct Str {
+    Str() = default;
+    std::string str() {
+        std::string t = b.str();
+        b.clear(); 
+        return t;
+    }
+    std::stringstream b;
+};
