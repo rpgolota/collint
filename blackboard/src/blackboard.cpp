@@ -83,7 +83,7 @@ double BlackboardMethod::solve() {
         // if (!blackboard.empty()) {
         //     std::cout << std::endl;
         // }
-
+        
         if (a.is_solved()) {
             return t;
         }

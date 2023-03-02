@@ -124,6 +124,9 @@ class Agent:
         if blackboard.is_full():
             # print("Replacing a hint on blackboard.")
             different = [i for i, h in enumerate(blackboard.data) if h not in self.hints]
+            # no choices
+            if not different:
+                return
             to_replace = random.choice(different)
             blackboard.data[to_replace] = selected_hint
         else:
@@ -203,7 +206,7 @@ def blackboard(M, B, return_agent=False):
         a.pick_and_replace(blackboard)
         # check for solution
         if a.is_solved():
-            print(f"Max Matching({matching(a.problem.assignment)}), C({comp_cost(M, t):.6f})")
+            # print(f"Max Matching({matching(a.problem.assignment)}), C({comp_cost(M, t):.6f})")
             if return_agent:
                 return t, a
             else:
@@ -212,7 +215,7 @@ def blackboard(M, B, return_agent=False):
         mat = matching(a.problem.assignment)
         if mat > matchmax:
             matchmax = mat 
-        print(f"Max Matching({matchmax}), C({comp_cost(M, t):.6f})")
+        # print(f"Max Matching({matchmax}), C({comp_cost(M, t):.6f})")
 
 # computes the computational cost
 def comp_cost(M, t_star):
@@ -230,14 +233,26 @@ def matching(assignment):
 # sample running script
 if __name__ == "__main__":
     
-    M = 10
-    B = 7
-    show_assignment = True
+    Ms = [4]
+    Bs = [1]
+    N = 10
     
-    t_star, a = blackboard(M, B, return_agent=show_assignment)
-    C = comp_cost(M, t_star)
+    with open("py.csv", 'w') as f:
+        f.write("Group Size,Blackboard Size,Time when Completed,Computational Cost\n")
+        f.flush()
+        for M in Ms:
+            for B in Bs:
+                for _ in range(N):
+                    print(f"M({M}), B({B})", end='', flush=True)
+                    t_star = blackboard(M, B, return_agent=False)
+                    C = comp_cost(M, t_star)
+                    f.write(f"{M},{B},{t_star:.8f},{C:.8f}\n")
+                    f.flush()
+                    print(f", t*({t_star}), C({C})")
+                    
+            
     
     print("----------------------------")
     print(f"Solved puzzle with t* = {t_star}, and C = {C}")
-    if show_assignment:
-        print(f"Final assignemnt: {a.problem.assignment}")
+    # if show_assignment:
+    #     print(f"Final assignemnt: {a.problem.assignment}")
