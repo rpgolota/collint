@@ -1,8 +1,8 @@
 use blackboard::BlackboardResult;
-use config::{builder, Config};
+use config::Config;
+use indicatif::ProgressBar;
 use serde::Deserialize;
-use std::{env, fs::File, io::prelude::*, io::BufWriter, ops::Range, vec};
-use indicatif::{ProgressBar, ProgressStyle, ProgressState};
+use std::{cmp::Ordering, env, fs::File, io::prelude::*, io::BufWriter, ops::Range, vec};
 
 fn computational_cost(m: u32, t: f64) -> f64 {
     (m as f64) * t / 3628800.0f64
@@ -60,8 +60,8 @@ impl From<ConfigData> for Experiment {
         };
 
         Experiment {
-            group_sizes: group_sizes,
-            blackboard_sizes: blackboard_sizes,
+            group_sizes,
+            blackboard_sizes,
             n_repeat: layout.n_repeat,
         }
     }
@@ -69,24 +69,27 @@ impl From<ConfigData> for Experiment {
 
 fn get_args() -> Result<ConfigData, Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
-    let config = if args.len() < 2 {
-        println!("info: no config file provided\ninfo: checking for config with name 'default'");
-        Config::builder()
-            .add_source(config::File::with_name("default"))
-            .set_default("flush_frequency", 0.1)?
-            .build()
-    } else if args.len() > 2 {
-        println!();
-        Err(config::ConfigError::Message(
+    let config = match args.len().cmp(&2) {
+        Ordering::Less => {
+            println!(
+                "info: no config file provided\ninfo: checking for config with name 'default'"
+            );
+            Config::builder()
+                .add_source(config::File::with_name("default"))
+                .set_default("flush_frequency", 0.1)?
+                .build()
+        }
+        Ordering::Greater => Err(config::ConfigError::Message(
             "provided more arguments than allowed".to_string(),
-        ))
-    } else {
-        let name = args.get(1).unwrap();
-        println!("info: checking for config with name '{}'", name);
-        Config::builder()
-            .add_source(config::File::with_name(name))
-            .set_default("flush_frequency", 0.1)?
-            .build()
+        )),
+        _ => {
+            let name = args.get(1).unwrap();
+            println!("info: checking for config with name '{}'", name);
+            Config::builder()
+                .add_source(config::File::with_name(name))
+                .set_default("flush_frequency", 0.1)?
+                .build()
+        }
     }?;
     println!("info: loaded config file");
     let exp = config.try_deserialize::<ConfigData>()?;
@@ -112,7 +115,7 @@ struct Jobs {
     bi: usize,
     ni: usize,
     finished: bool,
-    max: u64
+    max: u64,
 }
 
 #[derive(Debug)]
@@ -125,18 +128,15 @@ impl Jobs {
     fn new(m: Vec<u32>, b: Vec<u32>, n: u32) -> Self {
         let max = (m.len() * b.len() * n as usize) as u64;
         Jobs {
-            m: m,
-            b: b,
-            n: n,
+            m,
+            b,
+            n,
             mi: 0,
             bi: 0,
             ni: 0,
             finished: false,
-            max: max
+            max,
         }
-    }
-    fn done(&self) -> bool {
-        return self.finished;
     }
     fn next(&mut self) -> Job {
         let mi = self.mi;
@@ -176,19 +176,20 @@ impl ResultsWriter {
         Self {
             file: BufWriter::new(File::create(filename).unwrap()),
             counter: 0,
-            flush_period: flush_period,
-            compute_cost: compute_cost,
+            flush_period,
+            compute_cost,
         }
     }
     fn write(&mut self, result: Option<BlackboardResult>) -> bool {
         match result {
             Some(r) => {
-                self.file.write(r.to_string().as_bytes());
+                let _ = self.file.write(r.to_string().as_bytes());
                 if self.compute_cost {
-                    self.file
+                    let _ = self
+                        .file
                         .write(format!(",{}\n", computational_cost(r.m, r.t_star)).as_bytes());
                 } else {
-                    self.file.write(b"\n");
+                    let _ = self.file.write(b"\n");
                 }
                 if self.counter == self.flush_period {
                     self.file.flush().unwrap();
@@ -197,7 +198,7 @@ impl ResultsWriter {
                 self.counter += 1;
                 true
             }
-            None => false
+            None => false,
         }
     }
 }
@@ -231,7 +232,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         handles.push(std::thread::spawn(|| None));
     }
 
-    // hand out all the jobs
     let mut n_finished: u64 = 0;
     while n_finished != jobs.total() {
         let mut to_join: Vec<usize> = vec![];
