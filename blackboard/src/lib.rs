@@ -49,11 +49,27 @@ struct LetterAssignment {
     value: u32,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy)]
 enum Hint {
     One(LetterAssignment),
     Two(LetterAssignment, LetterAssignment),
     Three(LetterAssignment, LetterAssignment, LetterAssignment),
+}
+
+impl PartialEq for Hint {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Hint::One(a), Hint::One(a1)) => a == a1,
+            (Hint::Two(a, b), Hint::Two(a1, b1)) => (a == a1 && b == b1) || (a == b1 && b == a1),
+            (Hint::Three(a, b, c), Hint::Three(a1, b1, c1)) => {
+                (a == a1 && b == b1 && c == c1)
+                    || (a == b1 && b == a1 && c == c1)
+                    || (a == c1 && b == b1 && c == a1)
+                    || (a == a1 && b == c1 && c == b1)
+            }
+            _ => false,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -287,7 +303,7 @@ mod tests {
 
     use rand::seq::SliceRandom;
 
-    use crate::{blackboard, Agent, BlackboardResult, Hint, LetterAssignment, Problem};
+    use crate::{Agent, Hint, LetterAssignment, Problem};
 
     #[test]
     fn problem() {
