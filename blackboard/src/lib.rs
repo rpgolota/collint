@@ -60,12 +60,11 @@ impl PartialEq for Hint {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (Hint::One(a), Hint::One(a1)) => a == a1,
-            (Hint::Two(a, b), Hint::Two(a1, b1)) => (a == a1 && b == b1) || (a == b1 && b == a1),
+            (Hint::Two(a, b), Hint::Two(c, d)) => (a == c && b == d) || (a == d && b == c),
             (Hint::Three(a, b, c), Hint::Three(a1, b1, c1)) => {
-                (a == a1 && b == b1 && c == c1)
-                    || (a == b1 && b == a1 && c == c1)
-                    || (a == c1 && b == b1 && c == a1)
-                    || (a == a1 && b == c1 && c == b1)
+                let h: HashSet<LetterAssignment> = [*a, *b, *c].iter().copied().collect();
+                let h1: HashSet<LetterAssignment> = [*a1, *b1, *c1].iter().copied().collect();
+                h == h1
             }
             _ => false,
         }
