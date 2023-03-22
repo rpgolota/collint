@@ -244,6 +244,12 @@ pub struct BlackboardResult {
     pub t_star: f64,
 }
 
+impl ToString for BlackboardResult {
+    fn to_string(&self) -> String {
+        format!("{},{},{}", self.m, self.b, self.t_star)
+    }
+}
+
 pub fn blackboard(b: u32, m: u32) -> Option<BlackboardResult> {
     let problem = Problem::new("DONALD", "GERALD", "ROBERT");
 
