@@ -13,7 +13,7 @@
 #   - compute_cost = true | false
 # + choose number of threads to use when computing (you can crash your computer if you make this too big)
 #   - n_threads = integer > 0
-# + if blackboard algorithm runs N times, the file will be flushed to disk every (N / flush_frequency) times. (higher = more frequent backups, slower; lower = less frequent updates, faster)
+# + [optional] if blackboard algorithm runs N times, the file will be flushed to disk every (N / flush_frequency) times. (higher = more frequent backups, slower; lower = less frequent updates, faster)
 #   - flush_frequency = integer >= 0
 
 group_range = { start = 1, end = 2 }
