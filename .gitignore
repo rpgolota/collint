@@ -4,3 +4,4 @@ __pycache__
 *.exe
 .vscode
 target
+.DS_Store
