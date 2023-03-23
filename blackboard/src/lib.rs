@@ -265,7 +265,7 @@ impl ToString for BlackboardResult {
     }
 }
 
-pub fn blackboard(b: u32, m: u32) -> Option<BlackboardResult> {
+pub fn blackboard(m: u32, b: u32) -> Option<BlackboardResult> {
     let problem = Problem::new("DONALD", "GERALD", "ROBERT");
 
     let delta = 1.0 / (m as f64);

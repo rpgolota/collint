@@ -1,25 +1,47 @@
-# ---- allowed values -----
-# + choose one to select M
-#   - group_range = { start = integer, end = integer }
-#   - group_sizes = [ integer, .. ]
-# + choose one to select B
-#   - blackboard_range = { start = integer, end = integer }
-#   - blackboard_sizes = [ integer, .. ]
-# + chooses how many time each (m,b) pair are repeated
-#   - n_repeat = integer > 0
-# + choose csv file to write to format is (m, b, t) or (m, b, t, c)
-#   - output = "path/to/file.csv"
-# + choose if to compute the cost and include in csv as the last column
-#   - compute_cost = true | false
-# + choose number of threads to use when computing (you can crash your computer if you make this too big)
-#   - n_threads = integer > 0
-# + [optional] if blackboard algorithm runs N times, the file will be flushed to disk every (N / flush_frequency) times. (higher = more frequent backups, slower; lower = less frequent updates, faster)
-#   - flush_frequency = integer >= 0
+#================================================      README     ====================================================#
+#                                                                                                                     #
+# Copy this file for each experiment to run. Recommend to change output parameter to match name of this file.         # 
+# Optional parameters do not need to be included.                                                                     # 
+# For best performance turn on threads, and set flush_frequeny pretty high, ~100 is okay.                             #
+#                                                                                                                     #
+#------------------------------------------------  allowed values ----------------------------------------------------#
+#                                                                                                                     #
+# + choose one to select M                                                                                            #
+#   - group_range = { start = integer, end = integer }                                                                #
+#   - group_sizes = [ integer, .. ]                                                                                   #
+#                                                                                                                     #
+# + choose one to select B                                                                                            #
+#   - blackboard_range = { start = integer, end = integer }                                                           #
+#   - blackboard_sizes = [ integer, .. ]                                                                              #
+#                                                                                                                     #
+# + chooses how many time each (m,b) pair are repeated                                                                #
+#   - n_repeat = integer > 0                                                                                          #
+#                                                                                                                     #
+# + choose csv file to write to format is (m, b, t, c) or (m, b, t)                                                   #
+#   - output = "path/to/file.csv"                                                                                     #
+#                                                                                                                     #
+# + [optional] choose if to compute the cost and include in csv as the last column                                    #
+#   [default(true)]                                                                                                   #
+#   - compute_cost = true | false                                                                                     #
+#                                                                                                                     #
+# + [optional] choose number of threads to use when computing (you can crash your computer if you make this too big)  #
+#   [default(true)]                                                                                                   #
+#   - use_threads = true | false                                                                                      #
+#                                                                                                                     #
+# + [optional] write results to disk every flush_frequency results.                                                   #
+#   - flush_frequency = integer >= 0                                                                                  #
+#   [default(100)]                                                                                                    #
+#                                                                                                                     #
+#=====================================================================================================================#
 
-group_range = { start = 1, end = 2 }
-blackboard_range = { start = 1, end = 2 }
-n_repeat = 3
+
+# Required Parameters
+group_range = { start = 1, end = 7 }
+blackboard_sizes = [1, 2, 3, 4, 5, 6, 7]
+n_repeat = 10
 output = "default.csv"
+
+# Optional Parameters
 compute_cost = true
-n_threads = 10
-flush_frequency = 10
+use_threads = true
+flush_frequency = 100
