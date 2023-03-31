@@ -44,4 +44,4 @@ output = "blackboard_default.csv"
 # Optional Parameters
 use_threads = true
 flush_frequency = 100
-compute_phi = true
+compute_phi = false
