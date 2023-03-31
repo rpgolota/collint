@@ -1,0 +1,41 @@
+#================================================      README     ====================================================#
+#                                                                                                                     #
+# Copy this file for each experiment to run. Recommend to change output parameter to match name of this file.         # 
+# Optional parameters do not need to be included.                                                                     # 
+# For best performance turn on threads, and set flush_frequeny pretty high, ~100 is okay.                             #
+#                                                                                                                     #
+#------------------------------------------------  allowed values ----------------------------------------------------#
+#                                                                                                                     #
+# + choose one to select M                                                                                            #
+#   - group_range = { start = integer, end = integer }                                                                #
+#   - group_sizes = [ integer, .. ]                                                                                   #
+#                                                                                                                     #
+# + select p values                                                                                                   #
+#   - p_values = [ float, .. ]                                                                                        #
+#                                                                                                                     #
+# + chooses how many time each (m,b) pair are repeated                                                                #
+#   - n_repeat = integer > 0                                                                                          #
+#                                                                                                                     #
+# + choose csv file to write to format is (m, p, t, c)                                                                #
+#   - output = "path/to/file.csv"                                                                                     #
+#                                                                                                                     #
+# + [optional] choose number of threads to use when computing (you can crash your computer if you make this too big)  #
+#   [default(true)]                                                                                                   #
+#   - use_threads = true | false                                                                                      #
+#                                                                                                                     #
+# + [optional] write results to disk every flush_frequency results.                                                   #
+#   - flush_frequency = integer >= 0                                                                                  #
+#   [default(100)]                                                                                                    #
+#                                                                                                                     #
+#=====================================================================================================================#
+
+
+# Required Parameters
+group_range = { start = 1, end = 7 }
+p_values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+n_repeat = 10
+output = "imitative_default.csv"
+
+# Optional Parameters
+use_threads = true
+flush_frequency = 100

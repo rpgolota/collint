@@ -17,12 +17,8 @@
 # + chooses how many time each (m,b) pair are repeated                                                                #
 #   - n_repeat = integer > 0                                                                                          #
 #                                                                                                                     #
-# + choose csv file to write to format is (m, b, t, c) or (m, b, t)                                                   #
+# + choose csv file to write to format is (m, b, t, c) or (m, b, t, c, phi)                                           #
 #   - output = "path/to/file.csv"                                                                                     #
-#                                                                                                                     #
-# + [optional] choose if to compute the cost and include in csv as the last column                                    #
-#   [default(true)]                                                                                                   #
-#   - compute_cost = true | false                                                                                     #
 #                                                                                                                     #
 # + [optional] choose number of threads to use when computing (you can crash your computer if you make this too big)  #
 #   [default(true)]                                                                                                   #
@@ -32,6 +28,10 @@
 #   - flush_frequency = integer >= 0                                                                                  #
 #   [default(100)]                                                                                                    #
 #                                                                                                                     #
+# + [optional] choose to compute phi                                                                                  #
+#   [default(false)]                                                                                                  #
+#   - compute_phi = true | false                                                                                      #
+#                                                                                                                     #
 #=====================================================================================================================#
 
 
@@ -39,9 +39,9 @@
 group_range = { start = 1, end = 7 }
 blackboard_sizes = [1, 2, 3, 4, 5, 6, 7]
 n_repeat = 10
-output = "default.csv"
+output = "blackboard_default.csv"
 
 # Optional Parameters
-compute_cost = true
 use_threads = true
 flush_frequency = 100
+compute_phi = true
