@@ -48,11 +48,7 @@ pub fn imitative(m: u32, p: f64, max_c: f64) -> Option<ImitativeResult> {
         let i: usize = rand::thread_rng().gen_range(0..agents.len());
         let a = agents.get_mut(i).unwrap();
 
-        if i == best_agent {
-            continue;
-        }
-
-        if rand::thread_rng().gen_bool(p) {
+        if i != best_agent && rand::thread_rng().gen_bool(p) {
             a.imitate(&best);
         } else {
             a.elementary_move();
