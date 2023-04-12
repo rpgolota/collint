@@ -74,6 +74,7 @@ dependencies = [
 [[package]]
 name = "collint"
 version = "0.2.1"
+source = "git+https://github.com/rpgolota/collint.git#e9c281ec6b4e0b65c7c64b4bbe4e714a148a2c50"
 dependencies = [
  "bimap",
  "config",
