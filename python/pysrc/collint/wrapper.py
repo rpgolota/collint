@@ -1,4 +1,3 @@
-from __future__ import annotations
 from .collint import blackboard_rs, imitative_rs
 from typing import Union
 
