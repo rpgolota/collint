@@ -59,7 +59,7 @@ pub fn imitative(m: u32, p: f64, max_c: f64) -> Option<ImitativeResult> {
             best_agent = i;
             best_cost = a.cost;
         }
-        if a.is_solved() {
+        if a.cost == 0 {
             return Some(ImitativeResult {
                 m,
                 p,

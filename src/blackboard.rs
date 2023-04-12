@@ -57,7 +57,7 @@ pub fn blackboard(m: u32, b: u32, max_c: f64, compute_phi: bool) -> Option<Black
                 m,
                 b,
                 t_star: t,
-                phi: calculate_phi(&agents),
+                phi: if compute_phi { calculate_phi(&agents) } else { f64::NAN },
                 c: computational_cost(m, t),
             });
         }
