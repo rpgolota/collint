@@ -10,10 +10,6 @@ class Experiment:
 
         self._run_type = None
 
-    def enable_type_checking(self):
-        self._type_checking = True
-        return self
-
     def disable_type_checking(self):
         self._type_checking = False
         return self
@@ -74,10 +70,13 @@ class Experiment:
         else:
             for m, p, _ in product(self._ms, self._ps, range(self._n)):
                 yield imitative.imitative(m, p, max_c=self._max_c)
+        if not self._type_checking and self._type_checking_original:
+            config.enable_python_type_checking()
 
     # if parallel, runs fully and returns results
     # if not parallel, gives a generator that yields value by value. call list() on result to run all
     def run(self):
+        self._type_checking_original = config.is_python_type_checking_enabled()
         if self._run_type is None:
             raise ValueError(
                 "Cannot run without calling either blackboard or imitative method"
@@ -86,6 +85,9 @@ class Experiment:
             config.disable_python_type_checking()
 
         if self._parallel:
-            return self._run_parallel()
+            results = self._run_parallel()
+            if not self._type_checking and self._type_checking_original:
+                config.enable_python_type_checking()
+            return results
         else:
             return self._yield_non_parallel()
