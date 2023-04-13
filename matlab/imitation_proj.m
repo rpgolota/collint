@@ -29,6 +29,9 @@ while any(cost==0, 'all') == 0 && t < tmax
     P = (V > p); % 1 if V > p and 0 if V <= p
     
     for i = 1:100
+        if i == m
+            P(m) = 1;
+        end 
         %% Elementary move 1-p 
         if P(i) == 1
             k = randperm(10, 2); % swap index
