@@ -1,8 +1,11 @@
 use crate::common::{computational_cost, Agent, Hint, Problem};
 use config::Config;
+use indicatif::ProgressBar;
+use itertools::{iproduct, Itertools};
 use rand::seq::SliceRandom;
+use rayon::prelude::*;
 use serde::Deserialize;
-use std::{cmp::Ordering, env, fs::File, io::prelude::*, io::BufWriter, ops::Range};
+use std::{cmp::Ordering, env, fs::File, io::prelude::*, io::BufWriter, ops::Range, sync::Mutex};
 
 #[derive(Debug)]
 pub struct BlackboardResult {
@@ -57,12 +60,51 @@ pub fn blackboard(m: u32, b: u32, max_c: f64, compute_phi: bool) -> Option<Black
                 m,
                 b,
                 t_star: t,
-                phi: if compute_phi { calculate_phi(&agents) } else { f64::NAN },
+                phi: if compute_phi {
+                    calculate_phi(&agents)
+                } else {
+                    f64::NAN
+                },
                 c: computational_cost(m, t),
             });
         }
     }
     None
+}
+
+#[allow(dead_code)]
+pub fn blackboard_parallel(
+    ms: Vec<u32>,
+    bs: Vec<u32>,
+    n: u32,
+    max_c: f64,
+    compute_phi: bool,
+    show_progress: bool,
+) -> Vec<Option<BlackboardResult>> {
+    let results: Mutex<Vec<Option<BlackboardResult>>> = Mutex::new(vec![]);
+    let jobs_len = ms.len() * bs.len() * n as usize;
+
+    if show_progress {
+        let pb = Mutex::new(ProgressBar::new(jobs_len as u64));
+
+        iproduct!(ms, bs, 0..n)
+            .collect_vec()
+            .into_par_iter()
+            .for_each(|(m, b, _)| {
+                let r = blackboard(m, b, max_c, compute_phi);
+                pb.lock().unwrap().inc(1);
+                results.lock().unwrap().push(r);
+            });
+    } else {
+        iproduct!(ms, bs, 0..n)
+            .collect_vec()
+            .into_par_iter()
+            .for_each(|(m, b, _)| {
+                let r = blackboard(m, b, max_c, compute_phi);
+                results.lock().unwrap().push(r);
+            });
+    }
+    results.into_inner().expect("Error unwrapping results")
 }
 
 #[derive(Debug, Deserialize, Clone)]

@@ -1,8 +1,11 @@
 use crate::common::{computational_cost, Agent, Problem};
 use config::Config;
+use indicatif::ProgressBar;
+use itertools::{iproduct, Itertools};
 use rand::Rng;
+use rayon::prelude::*;
 use serde::Deserialize;
-use std::{cmp::Ordering, env, fs::File, io::prelude::*, io::BufWriter, ops::Range};
+use std::{cmp::Ordering, env, fs::File, io::prelude::*, io::BufWriter, ops::Range, sync::Mutex};
 
 #[derive(Debug)]
 pub struct ImitativeResult {
@@ -69,6 +72,40 @@ pub fn imitative(m: u32, p: f64, max_c: f64) -> Option<ImitativeResult> {
         }
     }
     None
+}
+
+#[allow(dead_code)]
+pub fn imitative_parallel(
+    ms: Vec<u32>,
+    ps: Vec<f64>,
+    n: u32,
+    max_c: f64,
+    show_progress: bool,
+) -> Vec<Option<ImitativeResult>> {
+    let results: Mutex<Vec<Option<ImitativeResult>>> = Mutex::new(vec![]);
+    let jobs_len = ms.len() * ps.len() * n as usize;
+
+    if show_progress {
+        let pb = Mutex::new(ProgressBar::new(jobs_len as u64));
+
+        iproduct!(ms, ps, 0..n)
+            .collect_vec()
+            .into_par_iter()
+            .for_each(|(m, p, _)| {
+                let r = imitative(m, p, max_c);
+                pb.lock().unwrap().inc(1);
+                results.lock().unwrap().push(r);
+            });
+    } else {
+        iproduct!(ms, ps, 0..n)
+            .collect_vec()
+            .into_par_iter()
+            .for_each(|(m, p, _)| {
+                let r = imitative(m, p, max_c);
+                results.lock().unwrap().push(r);
+            });
+    }
+    results.into_inner().expect("Error unwrapping results")
 }
 
 #[derive(Debug, Deserialize, Clone)]

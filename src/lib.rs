@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-mod common;
 mod blackboard;
+mod common;
 mod imitative;
 
-pub use imitative::{imitative, ImitativeResult};
-pub use blackboard::{blackboard, BlackboardResult};
+pub use blackboard::{blackboard, blackboard_parallel, BlackboardResult};
+pub use imitative::{imitative, imitative_parallel, ImitativeResult};
