@@ -1,32 +1,46 @@
-from collint import blackboard, imitative
+from collint import Experiment
 
-# General parameters
-RUN_TYPE = "imitative" # blackboard | imitative
-MAX_C = 10.0
-M = [8,9,10]
-N = 10
 
-# Blackboard parameters
-B = [6,7,8]
-COMPUTE_PHI = False
+def run_blackboard_experiment():
+    M = range(7, 10 + 1)
+    B = range(6, 8 + 1)
+    N = 1
 
-# Imitative parameters
-P = [0.5, 0.6]
+    results = (
+        Experiment()
+        .disable_type_checking()
+        .max_c(10.0)
+        .parallel(show_progress=True)
+        .blackboard(M, B, N, compute_phi=False)
+        .run()
+    )
+    return results
 
-if RUN_TYPE == "blackboard":
-    for m in M:
-        for b in B:
-            for _ in range(N):
-                result = blackboard(m, b, max_c=MAX_C, compute_phi=COMPUTE_PHI)
-                if result is not None:
-                    if COMPUTE_PHI:
-                        print(f"{result['m']},{result['b']},{result['t_star']},{result['phi']},{result['c']}")
-                    else:
-                        print(f"{result['m']},{result['b']},{result['t_star']},{result['c']}")
-elif RUN_TYPE == "imitative":
-    for m in M:
-        for p in P:
-            for _ in range(N):
-                result = imitative(m, p, max_c=MAX_C)
-                if result is not None:
-                    print(f"{result['m']},{result['p']},{result['t_star']},{result['c']}")
+
+def run_imitative_experiment():
+    M = range(7, 10 + 1)
+    P = [0.5, 0.6]
+    N = 1
+
+    results = (
+        Experiment()
+        .disable_type_checking()
+        .max_c(10.0)
+        .parallel(show_progress=True)
+        .imitative(M, P, N)
+        .run()
+    )
+    return results
+
+
+if __name__ == "__main__":
+    rb = run_blackboard_experiment()
+    ri = run_imitative_experiment()
+
+    print("Blackboard results:")
+    for r in rb:
+        print(r)
+    print()
+    print("Imitative Results:")
+    for r in ri:
+        print(r)

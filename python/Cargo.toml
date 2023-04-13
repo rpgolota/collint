@@ -10,4 +10,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = "0.18.1"
-collint_rs = { package = "collint", git = "https://github.com/rpgolota/collint.git" }
+collint_lib = { package = "collint", git = "https://github.com/rpgolota/collint.git" }
