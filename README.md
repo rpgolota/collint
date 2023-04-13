@@ -34,7 +34,9 @@ The csv columns are explained in the configuration files in [collint/default](ht
 1) Install [rust](https://www.rust-lang.org/)
 2) Install python-3.8 or higher version
 3) Run `python -m pip install "git+https://github.com/rpgolota/collint.git#subdirectory=python"`
+
 Alternatively...
+
 3) Clone this repository with `git clone https://github.com/rpgolota/collint.git`
 4) Enter the directory of the python code with `cd collint/python`
 5) Install the contents of [collint/python](https://github.com/rpgolota/collint/tree/master/python) with `python -m pip install .`
