@@ -4,7 +4,10 @@
 ---
 
 ## Download from Releases
-Download from releases to get a collint executable for 64-bit windows. No other targets are built against.
+- Download from releases to get a collint executable for 64-bit windows. No other targets are built against.
+  - run with `collint <RUN_TYPE> <CONFIG_PATH>` (Explained later in collint arguments section)
+- Download from releases to get a python *.whl (wheel) file to install. Build for 64-bit windows using Python 3.9 (no other versions built)
+  - Run `python -m pip install collint-0.1.0-cp39-none-win_amd64.whl` to install. (Python 3.9)
 
 ## How to install from source
 There are two ways to use collint.
