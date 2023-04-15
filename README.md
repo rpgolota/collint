@@ -3,41 +3,31 @@
 #### Term project for MATH 485
 ---
 
-## Download from Releases
-- Download from releases to get a collint executable for 64-bit windows. No other targets are built against.
-  - run with `collint <RUN_TYPE> <CONFIG_PATH>` (Explained later in collint arguments section)
-- Download from releases to get a python *.whl (wheel) file to install. Only built for 64-bit windows.
-  - Base Format `collint-0.1.0-{PYTHON_VERSION}-none-win_amd64.whl` where `{PYTHON_VERSION}` can be:
+## From Release
+- Install python *.whl (wheel) file from release. Only built for 64-bit windows.
+  - Select a `{RELEASE_TAG}`. Newest is `0.2.2`. This is the rust collint version.
+    - For each release, there is a `{BINDINGS_TAG}`.
+    - For release `0.2.2`, this is `{BINDINGS_TAG} = 0.1.0`.
+  - Select a `{PYTHON_VERSION}`:
     - Python 3.8  => `cp38`
     - Python 3.9  => `cp39`
     - Python 3.10 => `cp310`
     - Python 3.11 => `cp311`
-  - After choosing version, run the following command to install:
-    - `python -m pip collint-0.1.0-{PYTHON_VERSION}-none-win_amd64.whl`
+  - After choosing version and release tag, run:
+    - `python -m pip install https://github.com/rpgolota/collint/releases/download/{RELEASE_TAG}/collint-{BINDINGS_TAG}-{PYTHON_VERSION}-none-win_amd64.whl`
+    - For the latest release this expands to...
+    - `python -m pip install https://github.com/rpgolota/collint/releases/download/0.2.2/collint-0.1.0-{PYTHON_VERSION}-none-win_amd64.whl`
+  - Alternatively download the wheel file and install locally with:
+    - `python -m pip collint-{BINDINGS_TAG}-{PYTHON_VERSION}-none-win_amd64.whl`
+- Download from releases to get a collint executable for 64-bit windows. No other targets are built against.
+  - run with `collint <RUN_TYPE> <CONFIG_PATH>` (Explained later in collint arguments section)
 
-## How to install from source
+---
+
+## From Source
 There are two ways to use collint.
 One way is to build and run an executable that works with config files shown in [collint/default](https://github.com/rpgolota/collint/tree/master/default).
 Another way is to install the python wrapper around collint and use it in python scripts. The python wrapper is located in [collint/python](https://github.com/rpgolota/collint/tree/master/python).
-
-### collint executable
-Running this executable will write results to a csv file specified in the configuration file.
-The csv columns are explained in the configuration files in [collint/default](https://github.com/rpgolota/collint/tree/master/default).
-1) Install [rust](https://www.rust-lang.org/)
-2) Clone this repository with `git clone https://github.com/rpgolota/collint.git`
-3) Enter the root of the repository with `cd collint`
-4) Build this repository with `cargo build --release`
-5) The executable will be located at `target/release/collint(.exe)`
-6) Run the executable in target or alternatively run `cargo run --release -- <args>`
-
-#### collint arguments
-`collint <RUN_TYPE> <CONFIG_PATH>`
-- `RUN_TYPE` can be either:
-  - `b` or `blackboard` to run the blackboard method
-  - `i` or `imitative` to run the imitative method
-- `CONFIG_PATH` is optional
-  - Searches for either `blackboard_default.toml` oor `imitative_default.toml` if nothing is provided
-  - Provided path is relative to the directory you run `collint` from.
 
 ### collint Python library
 1) Install [rust](https://www.rust-lang.org/)
@@ -50,12 +40,23 @@ Alternatively...
 4) Enter the directory of the python code with `cd collint/python`
 5) Install the contents of [collint/python](https://github.com/rpgolota/collint/tree/master/python) with `python -m pip install .`
 
-#### How to use the collint Python library
+### collint executable
+
+1) Install [rust](https://www.rust-lang.org/)
+2) Clone this repository with `git clone https://github.com/rpgolota/collint.git`
+3) Enter the root of the repository with `cd collint`
+4) Build this repository with `cargo build --release`
+5) The executable will be located at `target/release/collint(.exe)`
+6) Run the executable in target or alternatively run `cargo run --release -- <args>`
+
+---
+
+## Python Bindings Documentation
 A working example is shown in [collint/python/example.py](https://github.com/rpgolota/collint/blob/master/python/example.py)
 
-The following are the exports of collint.
-- Experiment - A class that can run both blackboard and imitation experiments
+#### Experiment - A class that can run both blackboard and imitation experiments
 
+##### Public Api
 ```python
 from collint import Experiment
 
@@ -78,8 +79,10 @@ class Experiment:
     # otherwise you can just treat it as a normal python generator
     def run(self): ...
 ```
+
+##### Example 1 - Imitative experiment
+
 ```python
-### Running an imitative experiment
 from collint import Experiment
 
 M = range(7, 10 + 1) # using range, so disabled type checking
@@ -96,8 +99,9 @@ results = (
 ) # Results are a list of either a dictionary or None if we exceed computational cost of 1.0
 ```
 
+##### Example 2 - Blackboard experiment
+
 ```python
-### Running a blackboard experiment
 from collint import Experiment
 
 M = range(7, 10 + 1) # using range, so disabled type checking
@@ -113,8 +117,9 @@ results = (
 ) # Results are a list of either a dictionary or None if we exceed computational cost of 10.0
 ```
 
+##### Example 3 - Non-parallel blackboard experiment
+
 ```python
-### Running a non-parallel blackboard experiment, works the same for imitative
 from collint import Experiment
 
 M = range(7, 10 + 1) # using range, so disabled type checking
@@ -170,10 +175,13 @@ results = (
 results = [r for r in results if r is not None]
 ```
 
-- blackboard - A module that contains both parallel and non-parallel blackboard functions
+#### blackboard - A module that contains both parallel and non-parallel blackboard functions
 Has two exports for running the blackboard method.
 The parallel version runs to completion and only then returns the results.
 The parallel version can show a progress bar with show_progress == True
+
+##### Public Api
+
 ```python
 from collint.blackboard import blackboard, blackboard_parallel
 
@@ -182,16 +190,24 @@ from collint.blackboard import blackboard, blackboard_parallel
 def blackboard(m, b, /, *, max_c = 10.0, compute_phi = False): ...
 # returns a list of the dictionaries or None values. Keys are the same as blackboard()
 def blackboard_parallel(ms, bs, n, /, *, max_c = 10.0, compute_phi = False, show_progress = True): ...
+```
 
-### Example of how to run
+##### Example 1 - Blackboard parallel and non-parallel
+
+```python
+from collint.blackboard import blackboard, blackboard_parallel
+
 result = blackboard(10, 7, max_c = 9.0, compute_phi = True)
 results = blackboard_parallel([8, 9, 10], [5, 6, 7], 10, max_c = 9.0, compute_phi = True, show_progress = False)
 ```
 
-- imitative - A module that contains both parallel and non-parallel imitative functions
+#### imitative - A module that contains both parallel and non-parallel imitative functions
 Has two exports for running the imitative method.
 The parallel version runs to completion and only then returns the results.
 The parallel version can show a progress bar with show_progress == True
+
+##### Public Api
+
 ```python
 from collint.imitative import imitative, imitative_parallel
 
@@ -201,16 +217,25 @@ def imitative(m, p, /, *, max_c = 10.0): ...
 # returns a list of the dictionaries or None values. Keys are the same as imitative()
 def imitative_parallel(ms, ps, n, /, *, max_c = 10.0, show_progress = True): ...
 
-### Example of how to run
+```
+
+##### Example 1 - Imitative parallel and non-parallel
+
+```python
+from collint.imitative import imitative, imitative_parallel
+
 result = imitative(10, 0.7, max_c = 9.0)
 results = imitative_parallel([8, 9, 10], [0.5, 0.6, 0.7], 10, max_c = 9.0, show_progress = False)
 ```
 
-- config - A module that is responsible for configuring some aspects of collint
+#### config - A module that is responsible for configuring some aspects of collint
 Type checking happens before the underlying rust code is called.
 It is enabled by default, and disabling it might allow for some more pythonic uses of the collint library.
 An example of when it might be good to disable it is when using range() as an input to the parallel functions.
 Disabling this and passing in a wrong type of value to a function might cause the error to be less readable since it will be called from the compiled library.
+
+##### Public Api
+
 ```python
 from collint.config import (
     is_python_type_checking_enabled,
@@ -221,7 +246,11 @@ from collint.config import (
 def disable_python_type_checking(): ...
 def enable_python_type_checking(): ...
 def is_python_type_checking_enabled(): ...
+```
 
+##### Example 1 - Checking, enabling, and disabling type checking
+
+```python
 # check if type checking is enabled
 enabled = is_python_type_checking_enabled()
 
@@ -232,3 +261,17 @@ else:
     enable_python_type_checking()
 
 ```
+
+---
+
+## collint Binary Documentation
+Running this executable will write results to a csv file specified in the configuration file.
+The csv columns, and parameters are detained in the default configuration files in [collint/default](https://github.com/rpgolota/collint/tree/master/default).
+
+`collint <RUN_TYPE> <CONFIG_PATH>`
+- `RUN_TYPE` can be either:
+  - `b` or `blackboard` to run the blackboard method
+  - `i` or `imitative` to run the imitative method
+- `CONFIG_PATH` is optional
+  - Searches for either `blackboard_default.toml` oor `imitative_default.toml` if nothing is provided
+  - Provided path is relative to the directory you run `collint` from.
