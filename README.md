@@ -5,9 +5,9 @@
 
 ## From Release
 - Install python *.whl (wheel) file from release. Only built for 64-bit windows.
-  - Select a `{RELEASE_TAG}`. Newest is `0.2.2`. This is the rust collint version.
+  - Select a `{RELEASE_TAG}`. Newest is `0.2.3`. This is the rust collint version.
     - For each release, there is a `{BINDINGS_TAG}`.
-    - For release `0.2.2`, this is `{BINDINGS_TAG} = 0.1.0`.
+    - For release `0.2.3`, this is `{BINDINGS_TAG} = 0.1.1`.
   - Select a `{PYTHON_VERSION}`:
     - Python 3.8  => `cp38`
     - Python 3.9  => `cp39`
@@ -16,7 +16,7 @@
   - After choosing version and release tag, run:
     - `python -m pip install https://github.com/rpgolota/collint/releases/download/{RELEASE_TAG}/collint-{BINDINGS_TAG}-{PYTHON_VERSION}-none-win_amd64.whl`
     - For the latest release this expands to...
-    - `python -m pip install https://github.com/rpgolota/collint/releases/download/0.2.2/collint-0.1.0-{PYTHON_VERSION}-none-win_amd64.whl`
+    - `python -m pip install https://github.com/rpgolota/collint/releases/download/0.2.3/collint-0.1.1-{PYTHON_VERSION}-none-win_amd64.whl`
   - Alternatively download the wheel file and install locally with:
     - `python -m pip collint-{BINDINGS_TAG}-{PYTHON_VERSION}-none-win_amd64.whl`
 - Download from releases to get a collint executable for 64-bit windows. No other targets are built against.
