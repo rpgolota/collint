@@ -291,6 +291,7 @@ impl<'a> Agent<'a> {
                 == 0u32
         {
             self.cost = base.pow(8);
+            return;
         }
 
         let mut first_n: u32 = 0;
